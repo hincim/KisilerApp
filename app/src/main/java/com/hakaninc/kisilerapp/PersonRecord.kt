@@ -3,6 +3,7 @@ package com.hakaninc.kisilerapp
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -10,9 +11,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.google.gson.Gson
+import com.hakaninc.kisilerapp.entity.Persons
 
 @Composable
-fun PersonRecord() {
+fun PersonRecord(navController: NavController) {
 
     val tfNameController = remember {
         mutableStateOf("")
@@ -20,6 +26,10 @@ fun PersonRecord() {
     val tfTelController = remember {
         mutableStateOf("")
     }
+
+    val localFocusManager = LocalFocusManager.current
+    // geri tuşuna basınca texfieldları kapatmadan hemen geri dönerim.
+    // 2 kere tıklama yapmamak için.
 
     Scaffold(
         topBar = {
@@ -46,7 +56,11 @@ fun PersonRecord() {
                 }, label = {
                     Text(text ="Person Tel")
                 })
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = {
+                    localFocusManager.clearFocus()
+                    val name = tfNameController.value
+                    val tel = tfTelController.value
+                }, modifier = Modifier.size(250.dp,50.dp)) {
                     Text(text = "Save")
                 }
             }
