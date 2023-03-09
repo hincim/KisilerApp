@@ -1,5 +1,6 @@
 package com.hakaninc.kisilerapp
 
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,13 +12,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.hakaninc.kisilerapp.entity.Persons
-import com.hakaninc.kisilerapp.viewmodel.PersonDetailViewModel
+import com.hakaninc.kisilerapp.viewmodel.*
 
 @Composable
-fun PersonDetail(person: Persons) {
+fun PersonDetail(person: Persons,navController: NavController) {
 
     val tfNameController = remember {
         mutableStateOf("")
@@ -27,11 +30,15 @@ fun PersonDetail(person: Persons) {
     }
 
     val localFocusManager = LocalFocusManager.current
-    val viewModel : PersonDetailViewModel = viewModel()
+
+    val context = LocalContext.current
+    val viewModel : PersonDetailViewModel = viewModel(
+        factory = PersonDetailViewModelFactory(context.applicationContext as Application)
+    )
 
     LaunchedEffect(key1 = true){
-        tfNameController.value = person.name
-        tfTelController.value = person.tel
+        tfNameController.value = person.person_name
+        tfTelController.value = person.person_tel
     }
 
     Scaffold(
@@ -63,7 +70,8 @@ fun PersonDetail(person: Persons) {
                     localFocusManager.clearFocus()
                     val personName = tfNameController.value
                     val personTel = tfTelController.value
-                    viewModel.personUpdate(person.id,personName,personTel)
+                    viewModel.personUpdate(person.person_id,personName,personTel)
+                    navController.popBackStack()
                 }) {
                     Text(text = "Update")
                 }

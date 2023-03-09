@@ -1,5 +1,6 @@
 package com.hakaninc.kisilerapp
 
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,13 +12,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.hakaninc.kisilerapp.entity.Persons
+import com.hakaninc.kisilerapp.viewmodel.HomePageViewModel
+import com.hakaninc.kisilerapp.viewmodel.HomePageViewModelFactory
 import com.hakaninc.kisilerapp.viewmodel.PersonRecordViewModel
+import com.hakaninc.kisilerapp.viewmodel.PersonRecordViewModelFactory
 
 @Composable
 fun PersonRecord(navController: NavController) {
@@ -28,7 +33,10 @@ fun PersonRecord(navController: NavController) {
     val tfTelController = remember {
         mutableStateOf("")
     }
-    var viewModel : PersonRecordViewModel = viewModel()
+    val context = LocalContext.current
+    val viewModel : PersonRecordViewModel = viewModel(
+        factory = PersonRecordViewModelFactory(context.applicationContext as Application)
+    )
 
     val localFocusManager = LocalFocusManager.current
     // geri tuşuna basınca texfieldları kapatmadan hemen geri dönerim.
@@ -64,7 +72,7 @@ fun PersonRecord(navController: NavController) {
                     val name = tfNameController.value
                     val tel = tfTelController.value
                     viewModel.personRecord(name,tel)
-
+                    navController.popBackStack()
                 }, modifier = Modifier.size(250.dp,50.dp)) {
                     Text(text = "Save")
                 }

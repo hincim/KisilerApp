@@ -1,14 +1,16 @@
 package com.hakaninc.kisilerapp.viewmodel
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hakaninc.kisilerapp.entity.Persons
 import com.hakaninc.kisilerapp.repo.PersonsDaoRepo
 
-class HomePageViewModel : ViewModel() {
+class HomePageViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var pRepo = PersonsDaoRepo()
+    private var pRepo = PersonsDaoRepo(application = application)
     var personsList = MutableLiveData<List<Persons>>()
 
     init {
@@ -16,7 +18,7 @@ class HomePageViewModel : ViewModel() {
         personsList = pRepo.connectingToViewmodel()
     }
 
-    private fun getAllPersons() {
+    fun getAllPersons() {
         pRepo.getAllPersonsRepo()
     }
 

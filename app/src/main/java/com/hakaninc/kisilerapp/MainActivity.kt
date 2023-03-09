@@ -1,6 +1,7 @@
 package com.hakaninc.kisilerapp
 
 import android.app.Activity
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -28,6 +29,7 @@ import com.google.gson.Gson
 import com.hakaninc.kisilerapp.entity.Persons
 import com.hakaninc.kisilerapp.ui.theme.KisilerAppTheme
 import com.hakaninc.kisilerapp.viewmodel.HomePageViewModel
+import com.hakaninc.kisilerapp.viewmodel.HomePageViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +65,7 @@ fun PageChange() {
         )) {
             val personJson = it.arguments?.getString("person")
             val person = Gson().fromJson(personJson, Persons::class.java)
-            PersonDetail(person = person)
+            PersonDetail(person = person,navController)
         }
     }
 
@@ -72,7 +74,11 @@ fun PageChange() {
 @Composable
 fun HomePage(navController: NavController) {
 
-    val viewModel : HomePageViewModel = viewModel()
+    val context = LocalContext.current
+    val viewModel : HomePageViewModel = viewModel(
+        factory = HomePageViewModelFactory(context.applicationContext as Application)
+    )
+    // FIXME: Bunun ile viewmodelime application gönderirim.
 
     val searchCheck = remember {
         mutableStateOf(false)
@@ -84,6 +90,10 @@ fun HomePage(navController: NavController) {
         mutableStateOf(true)
     }
     val personList = viewModel.personsList.observeAsState(listOf())
+
+    LaunchedEffect(key1 = true){
+        viewModel.getAllPersons()
+    }
 
     Scaffold(
         topBar = {
@@ -155,9 +165,9 @@ fun HomePage(navController: NavController) {
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        Text(text = person.name +" - ${person.tel}")
+                                        Text(text = person.person_name +" - ${person.person_tel}")
                                         IconButton(onClick = {
-                                            viewModel.personDelete(person.id)
+                                            viewModel.personDelete(person.person_id)
                                         }) {
                                             Icon(painter = painterResource(id = R.drawable.ic_baseline_delete_outline_24), contentDescription = null,
                                             tint = Color.Gray)
