@@ -12,7 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hakaninc.kisilerapp.entity.Persons
+import com.hakaninc.kisilerapp.viewmodel.PersonDetailViewModel
 
 @Composable
 fun PersonDetail(person: Persons) {
@@ -25,6 +27,7 @@ fun PersonDetail(person: Persons) {
     }
 
     val localFocusManager = LocalFocusManager.current
+    val viewModel : PersonDetailViewModel = viewModel()
 
     LaunchedEffect(key1 = true){
         tfNameController.value = person.name
@@ -60,7 +63,7 @@ fun PersonDetail(person: Persons) {
                     localFocusManager.clearFocus()
                     val personName = tfNameController.value
                     val personTel = tfTelController.value
-
+                    viewModel.personUpdate(person.id,personName,personTel)
                 }) {
                     Text(text = "Update")
                 }

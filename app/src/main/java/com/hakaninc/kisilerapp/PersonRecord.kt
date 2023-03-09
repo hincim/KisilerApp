@@ -13,9 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.hakaninc.kisilerapp.entity.Persons
+import com.hakaninc.kisilerapp.viewmodel.PersonRecordViewModel
 
 @Composable
 fun PersonRecord(navController: NavController) {
@@ -26,6 +28,7 @@ fun PersonRecord(navController: NavController) {
     val tfTelController = remember {
         mutableStateOf("")
     }
+    var viewModel : PersonRecordViewModel = viewModel()
 
     val localFocusManager = LocalFocusManager.current
     // geri tuşuna basınca texfieldları kapatmadan hemen geri dönerim.
@@ -60,6 +63,8 @@ fun PersonRecord(navController: NavController) {
                     localFocusManager.clearFocus()
                     val name = tfNameController.value
                     val tel = tfTelController.value
+                    viewModel.personRecord(name,tel)
+
                 }, modifier = Modifier.size(250.dp,50.dp)) {
                     Text(text = "Save")
                 }
