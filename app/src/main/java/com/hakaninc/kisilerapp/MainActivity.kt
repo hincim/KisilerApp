@@ -1,11 +1,17 @@
 package com.hakaninc.kisilerapp
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,7 +20,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -29,9 +37,15 @@ import com.google.gson.Gson
 import com.hakaninc.kisilerapp.entity.Persons
 import com.hakaninc.kisilerapp.ui.theme.KisilerAppTheme
 import com.hakaninc.kisilerapp.viewmodel.HomePageViewModel
-import com.hakaninc.kisilerapp.viewmodel.HomePageViewModelFactory
+import com.hakaninc.kisilerapp.viewmodelfactory.HomePageViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -67,10 +81,12 @@ fun PageChange() {
             val person = Gson().fromJson(personJson, Persons::class.java)
             PersonDetail(person = person,navController)
         }
+
     }
 
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun HomePage(navController: NavController) {
 
@@ -91,8 +107,16 @@ fun HomePage(navController: NavController) {
     }
     val personList = viewModel.personsList.observeAsState(listOf())
 
+    val animatedProgress = remember {
+        androidx.compose.animation.core.Animatable(0f)
+    }
+
     LaunchedEffect(key1 = true){
         viewModel.getAllPersons()
+        animatedProgress.animateTo(
+            targetValue = 360f,
+            animationSpec = tween(durationMillis = 750)
+        )
     }
 
     Scaffold(
@@ -100,6 +124,7 @@ fun HomePage(navController: NavController) {
             TopAppBar(
                 backgroundColor = Color.White,
                 contentColor = Color.Black,
+
                 title = {
                     if (titleControl.value){
                         Text(text = "Persons")
@@ -140,6 +165,7 @@ fun HomePage(navController: NavController) {
                 })
         }, content = {
 
+
             LazyColumn {
                 items(
                     count = personList.value!!.count(),
@@ -149,6 +175,9 @@ fun HomePage(navController: NavController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(5.dp)
+                                .graphicsLayer(
+                                rotationX = animatedProgress.value
+                            )
                         ) {
                             Row(modifier = Modifier.clickable {
                                 val personJson = Gson().toJson(person)
@@ -189,7 +218,9 @@ fun HomePage(navController: NavController) {
                     contentDescription = null,
                     tint = Color.White
                 )
-            })
+            }, modifier = Modifier.graphicsLayer(
+                    rotationY = animatedProgress.value
+                    ))
         })
     val activity = (LocalContext.current as Activity)
     BackHandler(onBack = {

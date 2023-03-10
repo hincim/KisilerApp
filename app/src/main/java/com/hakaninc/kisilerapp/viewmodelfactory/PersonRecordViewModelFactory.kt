@@ -1,8 +1,9 @@
-package com.hakaninc.kisilerapp.viewmodel
+package com.hakaninc.kisilerapp.viewmodelfactory
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.hakaninc.kisilerapp.viewmodel.PersonRecordViewModel
 
 class PersonRecordViewModelFactory (var application: Application) : ViewModelProvider.NewInstanceFactory() {
 
