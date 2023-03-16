@@ -3,16 +3,17 @@ package com.hakaninc.kisilerapp.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 import org.jetbrains.annotations.NotNull
 
-@Entity(tableName = "persons")
-data class Persons(@PrimaryKey(autoGenerate = true)
-                   @ColumnInfo(name = "person_id")
-                   @NotNull
-                   val person_id : Int,
-                   @ColumnInfo(name = "person_name")
-                   @NotNull
-                   val person_name : String,
-                   @ColumnInfo(name = "person_tel")
-                   @NotNull
-                   val person_tel : String)
+
+data class Persons(@SerializedName("kisi_id")
+                   @Expose
+                   var person_id:Int,
+                   @SerializedName("kisi_ad")
+                   @Expose
+                   var person_name:String,
+                   @SerializedName("kisi_tel")
+                   @Expose
+                   var person_tel:String)

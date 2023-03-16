@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.hakaninc.kisilerapp.entity.Persons
 
+/*
 @Database(entities = [Persons::class], version = 1)
 abstract class Database : RoomDatabase() {
 
@@ -31,4 +32,4 @@ abstract class Database : RoomDatabase() {
             return INSTANCE
         }
     }
-}
+}*/

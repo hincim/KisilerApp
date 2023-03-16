@@ -2,6 +2,7 @@ package com.hakaninc.kisilerapp
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
@@ -33,6 +34,7 @@ fun PersonDetail(person: Persons,navController: NavController) {
     val tfTelController = remember {
         mutableStateOf("")
     }
+    var oldName = ""
 
     val localFocusManager = LocalFocusManager.current
 
@@ -47,6 +49,7 @@ fun PersonDetail(person: Persons,navController: NavController) {
     LaunchedEffect(key1 = true){
         tfNameController.value = person.person_name
         tfTelController.value = person.person_tel
+        oldName = person.person_name
         animatedProgress.animateTo(
             targetValue = 0f,
             animationSpec = tween(durationMillis = 250)
@@ -101,7 +104,7 @@ fun PersonDetail(person: Persons,navController: NavController) {
                     localFocusManager.clearFocus()
                     val personName = tfNameController.value
                     val personTel = tfTelController.value
-                    viewModel.personUpdate(person.person_id,personName,personTel)
+                    viewModel.personUpdate(person.person_id,personName,personTel,oldName)
                     navController.popBackStack()
                 }, modifier = Modifier
                     .graphicsLayer(

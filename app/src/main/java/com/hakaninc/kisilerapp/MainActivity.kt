@@ -176,8 +176,8 @@ fun HomePage(navController: NavController) {
                                 .fillMaxWidth()
                                 .padding(5.dp)
                                 .graphicsLayer(
-                                rotationX = animatedProgress.value
-                            )
+                                    rotationX = animatedProgress.value
+                                )
                         ) {
                             Row(modifier = Modifier.clickable {
                                 val personJson = Gson().toJson(person)
@@ -196,7 +196,7 @@ fun HomePage(navController: NavController) {
                                     ) {
                                         Text(text = person.person_name +" - ${person.person_tel}")
                                         IconButton(onClick = {
-                                            viewModel.personDelete(person.person_id)
+                                            viewModel.personDelete(person)
                                         }) {
                                             Icon(painter = painterResource(id = R.drawable.ic_baseline_delete_outline_24), contentDescription = null,
                                             tint = Color.Gray)

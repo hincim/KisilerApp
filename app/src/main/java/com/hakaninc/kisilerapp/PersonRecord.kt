@@ -1,11 +1,13 @@
 package com.hakaninc.kisilerapp
 
 import android.app.Application
+import android.widget.Toast
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,6 +42,8 @@ fun PersonRecord(navController: NavController) {
     val animatedProgress = remember {
         androidx.compose.animation.core.Animatable(500f)
     }
+    val answerCrud = viewModel.answer.observeAsState()
+
 
     LaunchedEffect(key1 = true){
         animatedProgress.animateTo(
@@ -95,6 +99,7 @@ fun PersonRecord(navController: NavController) {
                 }, modifier = Modifier.size(200.dp,50.dp)) {
                     Text(text = "Save", color = Color.Black)
                 }
+
             }
         }
     )

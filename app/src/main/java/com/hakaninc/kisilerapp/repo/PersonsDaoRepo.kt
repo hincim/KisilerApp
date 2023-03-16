@@ -4,12 +4,13 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.hakaninc.kisilerapp.entity.Persons
-import com.hakaninc.kisilerapp.room.Database
+//import com.hakaninc.kisilerapp.room.Database
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+/*
 class PersonsDaoRepo(application: Application) {
 
     private var personsListRepo = MutableLiveData<List<Persons>>()
@@ -66,4 +67,4 @@ class PersonsDaoRepo(application: Application) {
             getAllPersonsRepo()
         }
     }
-}
+}*/
